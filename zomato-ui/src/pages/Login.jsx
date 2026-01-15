@@ -10,11 +10,12 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      await login(form);
-      navigate("/restaurants");
+      await login(form); // ONLY this
+      navigate("/");
     } catch (err) {
-      setError(err.response?.data || "Login failed");
+      setError("Invalid email or password");
     }
   };
 
@@ -31,18 +32,14 @@ export default function Login() {
         <input
           className="w-full mb-3 p-2 border rounded"
           placeholder="Email"
-          onChange={(e) =>
-            setForm({ ...form, email: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
         />
 
         <input
           type="password"
           className="w-full mb-3 p-2 border rounded"
           placeholder="Password"
-          onChange={(e) =>
-            setForm({ ...form, password: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, password: e.target.value })}
         />
 
         <button className="w-full bg-red-500 text-white p-2 rounded">
