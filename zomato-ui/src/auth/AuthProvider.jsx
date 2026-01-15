@@ -1,41 +1,27 @@
-// import { useState } from "react";
-// import { AuthContext } from "./AuthContext";
-
-// export default function AuthProvider({ children }) {
-//   const [user, setUser] = useState(null);
-//   const [token, setToken] = useState(null);
-
-//   const login = (userData, jwtToken) => {
-//     setUser(userData);
-//     setToken(jwtToken);
-//     localStorage.setItem("token", jwtToken);
-//   };
-
-//   const logout = () => {
-//     setUser(null);
-//     setToken(null);
-//     localStorage.removeItem("token");
-//   };
-
-//   return (
-//     <AuthContext.Provider value={{ user, token, login, logout }}>
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// }
-
-
-
-
-
-import { createContext, useState } from "react";
-import * as authService from "../services/authService";
+import { createContext, useEffect, useState } from "react";
+import authService from "../services/authService";
+import { jwtDecode } from "jwt-decode";
 
 export const AuthContext = createContext(null);
 
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token"));
+
+  // 🔐 Rehydrate user from JWT
+  useEffect(() => {
+    if (token && !user) {
+      try {
+        const decoded = jwtDecode(token);
+        setUser({
+          fullName: decoded.fullName,
+          role: decoded.role,
+        });
+      } catch {
+        logout();
+      }
+    }
+  }, [token]);
 
   const login = async (credentials) => {
     const res = await authService.login(credentials);

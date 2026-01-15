@@ -25,6 +25,16 @@ const Restaurants = () => {
     }
   };
 
+  {
+    restaurants.map((restaurant) => (
+      <RestaurantCard
+        key={restaurant.id}
+        restaurant={restaurant}
+        onDeleted={fetchRestaurants}
+      />
+    ));
+  }
+
   if (loading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
@@ -50,7 +60,11 @@ const Restaurants = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
       {restaurants.map((restaurant) => (
-        <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+        <RestaurantCard
+          key={restaurant.id}
+          restaurant={restaurant}
+          onDeleted={fetchRestaurants}
+        />
       ))}
     </div>
   );
